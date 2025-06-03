@@ -3,3 +3,6 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+mock_api_routes:
+    resource: routes/mock_plate.yaml
