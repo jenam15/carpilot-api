@@ -7,4 +7,10 @@ namespace App\External\MockApiPlate\Dto;
  */
 class PlateLookupResponseDto
 {
+    public function __construct(
+        public readonly string $plate,
+        public readonly string $brand,
+        public readonly string $model,
+    ) {
+    }
 }

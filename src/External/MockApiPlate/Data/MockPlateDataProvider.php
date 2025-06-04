@@ -3,7 +3,7 @@
 namespace App\External\MockApiPlate\Data;
 
 use App\External\PlateMockApi\Dto\PlateLookupResponseDto;
-use App\External\PlateMockApi\Mapper\PlateLookupMapper;
+use App\External\MockApiPlate\Mapper\PlateLookupMapper;
 
 /**
  * Simule un fournisseur de données véhicule à partir d’une plaque.
@@ -11,6 +11,18 @@ use App\External\PlateMockApi\Mapper\PlateLookupMapper;
  */
 class MockPlateDataProvider
 {
+    public function findByPlate($plate)
+    {
+
+        foreach ($this->getFleet() as $vehicle) {
+            if ($vehicle['immat'] === $plate) {
+                return PlateLookupMapper::fromArray($vehicle);
+            }
+        }
+
+        return PlateLookupMapper::fromArray(['immat' => $plate]);
+    }
+
     /**
      * Flotte simulée de 10 véhicules.
      */
