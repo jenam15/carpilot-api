@@ -5,7 +5,7 @@
  * ============= ENTITÉ USER ================
  * ==========================================
  * 
- * Classe abstraite partagée entre Seller, Agent et Admin
+ * Classe abstraite partagée entre Seller Agent et Admin
  */
 
 namespace App\Entity\User;
@@ -154,6 +154,30 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Get the value of phone
+     *
+     * @return ?string
+     */
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    /**
+     * Set the value of phone
+     *
+     * @param ?string $phone
+     *
+     * @return self
+     */
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -242,4 +266,6 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Représentation string de l'utilisateur
      */
     abstract public function __toString(): string;
+
+
 }

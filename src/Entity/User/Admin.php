@@ -6,7 +6,7 @@
  * ==========================================
  */
 
-namespace App\Entity;
+namespace App\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
 
