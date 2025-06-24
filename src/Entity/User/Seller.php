@@ -8,9 +8,10 @@
 
 namespace App\Entity\User;
 
+use App\Entity\Vehicle;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity]
 class Seller extends User
@@ -33,6 +34,14 @@ class Seller extends User
 
     #[ORM\Column(length: 100)]
     private ?string $country;
+
+    #[ORM\OneToMany(mappedBy: 'seller', targetEntity: Vehicle::class, orphanRemoval: true)]
+    private collection $vehicles;
+
+    public function __construct()
+    {
+        $this->vehicles = new ArrayCollection();
+    }
 
     /**
      * ==========================================
@@ -83,6 +92,11 @@ class Seller extends User
     {
         $this->country = $country;
         return $this;
+    }
+
+    public function getVehicles()
+    {
+        return $this->vehicles;
     }
 
     /**
