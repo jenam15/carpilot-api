@@ -37,6 +37,7 @@ class VehicleMapper
         $vehicle->setBodyType($dto->bodyType);
         $vehicle->setWeightKg($dto->weightKg);
         $vehicle->setColor($dto->color);
+        $vehicle->setRegistrationDate(new \DateTimeImmutable($dto->registrationDate));
 
         return $vehicle;
 
