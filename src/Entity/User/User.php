@@ -58,7 +58,7 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Identifiant de connexion
      * Longueur 320 : standard RFC pour les emails
      */
-    #[ORM\Column(length: 320)]
+    #[ORM\Column(length: 320, unique: true)]
     protected ?string $email;
 
     /**

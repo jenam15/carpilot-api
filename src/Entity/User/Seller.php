@@ -41,6 +41,7 @@ class Seller extends User
     public function __construct()
     {
         $this->vehicles = new ArrayCollection();
+        $this->setRoles(['ROLE_SELLER']);
     }
 
     /**
