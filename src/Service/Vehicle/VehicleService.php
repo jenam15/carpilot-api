@@ -2,11 +2,13 @@
 
 namespace App\Service\Vehicle;
 
-use App\DTO\Vehicle\CreateVehicleDto;
-use App\DTO\Vehicle\VehicleResponseDto;
+use App\DTO\Vehicle\UpdateVehicleDto;
+use App\Entity\Vehicle;
 use App\Entity\User\Seller;
+use App\DTO\Vehicle\CreateVehicleDto;
 use App\Mapper\Vehicle\VehicleMapper;
 use App\Repository\VehicleRepository;
+use App\DTO\Vehicle\VehicleResponseDto;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -45,5 +47,39 @@ class VehicleService
         return $this->mapper->fromEntityToResponseDto($vehicle);
     }
 
+
+    public function findVehiclesBySeller(Seller $seller)
+    {
+        $vehicles = $this->repository->findBy(['seller' => $seller], ['createdAt' => 'DESC']);
+
+        $responseDtos = [];
+
+        foreach ($vehicles as $vehicle) {
+            $responseDtos[] = $this->mapper->fromEntityToResponseDto($vehicle);
+        }
+
+        return $responseDtos;
+    }
+
+
+    public function findVehiclebyId(Vehicle $vehicle)
+    {
+        return $this->mapper->fromEntityToResponseDto($vehicle);
+    }
+
+    public function updateVehicle(Vehicle $vehicle, UpdateVehicleDto $dto)
+    {
+        $this->mapper->fromUpdateDtoToEntity($vehicle, $dto);
+
+        $this->em->flush();
+
+        return $this->mapper->fromEntityToResponseDto($vehicle);
+    }
+
+    public function deleteVehicle(Vehicle $vehicle)
+    {
+        $this->em->remove($vehicle);
+        $this->em->flush();
+    }
 
 }
