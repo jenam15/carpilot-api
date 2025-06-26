@@ -39,6 +39,7 @@ class SellerResponseDto
         #[OA\Property(description: "Seller's country.", example: "France", nullable: true)]
         public readonly ?string $country,
 
+        public readonly ?array $vehicles = [],
 
         #[OA\Property(description: "The date and time the seller account was created.", type: "string", format: "date-time", example: "2025-06-25T20:15:47+00:00")]
         public readonly ?DateTimeImmutable $createdAt

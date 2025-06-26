@@ -33,17 +33,15 @@ class CreateSellerDto
     #[Assert\NotBlank(message: "The phone number cannot be blank.")]
     public ?string $phone = null;
 
-    // Les champs suivants sont optionnels
-
-    #[OA\Property(description: "Seller's street address.", example: "123 Rue de la République", nullable: true)]
+    #[OA\Property(description: "Seller's street address.", example: "123 Rue de la République")]
     public ?string $address = null;
 
-    #[OA\Property(description: "Seller's city.", example: "Lyon", nullable: true)]
+    #[OA\Property(description: "Seller's city.", example: "Lyon")]
     public ?string $city = null;
 
-    #[OA\Property(description: "Seller's postal code.", example: "69001", nullable: true)]
+    #[OA\Property(description: "Seller's postal code.", example: "69001")]
     public ?string $postalCode = null;
 
-    #[OA\Property(description: "Seller's country.", example: "France", nullable: true)]
+    #[OA\Property(description: "Seller's country.", example: "France")]
     public ?string $country = null;
 }

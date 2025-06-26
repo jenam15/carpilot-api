@@ -4,7 +4,9 @@ namespace App\Mapper\User;
 
 use App\Entity\User\Seller;
 use App\DTO\User\CreateSellerDto;
+use App\DTO\User\UpdateSellerDto;
 use App\DTO\User\SellerResponseDto;
+use App\Mapper\Vehicle\VehicleMapper;
 
 
 /**
@@ -15,6 +17,11 @@ use App\DTO\User\SellerResponseDto;
  */
 class UserMapper
 {
+
+    public function __construct(
+        private readonly VehicleMapper $vehicleMapper
+    ) {
+    }
     /**
      * Transforms a Seller entity into a SellerResponseDto.
      * This DTO is a safe representation of the seller's data, intended for API responses.
@@ -25,6 +32,13 @@ class UserMapper
      */
     public function fromEntityToSellerResponseDto(Seller $seller): SellerResponseDto
     {
+        $vehicleDtos = [];
+        foreach ($seller->getVehicles() as $vehicle) {
+            $dto = $this->vehicleMapper->fromEntityToResponseDto($vehicle);
+
+            $vehicleDtos[] = $dto;
+        }
+
         return new SellerResponseDto(
             $seller->getId(),
             $seller->getFirstName(),
@@ -35,6 +49,7 @@ class UserMapper
             $seller->getCity(),
             $seller->getPostalCode(),
             $seller->getCountry(),
+            $vehicleDtos,
             $seller->getCreatedAt()
         );
     }
@@ -58,6 +73,52 @@ class UserMapper
         $seller->setCity($dto->city);
         $seller->setPostalCode($dto->postalCode);
         $seller->setCountry($dto->country);
+
+        return $seller;
+    }
+
+    /**
+     * Applies changes from an UpdateSellerDto to an existing Seller entity.
+     * This method only updates fields that are not null in the DTO,
+     * allowing for partial updates of a seller's profile.
+     *
+     * @param UpdateSellerDto $dto The DTO containing the data to update.
+     * @param Seller $seller The existing Seller entity loaded from the database.
+     * @return Seller The same Seller entity instance, now modified.
+     */
+    public function fromUpdateSellerDtoToEntity(UpdateSellerDto $dto, Seller $seller): Seller
+    {
+        if ($dto->firstName !== null) {
+            $seller->setFirstName($dto->firstName);
+        }
+
+        if ($dto->lastName !== null) {
+            $seller->setLastName($dto->lastName);
+        }
+
+        if ($dto->email !== null) {
+            $seller->setEmail($dto->email);
+        }
+
+        if ($dto->phone !== null) {
+            $seller->setPhone($dto->phone);
+        }
+
+        if ($dto->address !== null) {
+            $seller->setAddress($dto->address);
+        }
+
+        if ($dto->city !== null) {
+            $seller->setCity($dto->city);
+        }
+
+        if ($dto->postalCode !== null) {
+            $seller->setPostalCode($dto->postalCode);
+        }
+
+        if ($dto->country !== null) {
+            $seller->setCountry($dto->country);
+        }
 
         return $seller;
     }
