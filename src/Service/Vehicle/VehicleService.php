@@ -2,18 +2,18 @@
 
 namespace App\Service\Vehicle;
 
-use App\DTO\Vehicle\UpdateVehicleDto;
-use App\Entity\Vehicle;
-use App\Entity\User\Seller;
 use App\DTO\Vehicle\CreateVehicleDto;
+use App\DTO\Vehicle\UpdateVehicleDto;
+use App\DTO\Vehicle\VehicleResponseDto;
+use App\Entity\User\Seller;
+use App\Entity\Vehicle;
 use App\Mapper\Vehicle\VehicleMapper;
 use App\Repository\VehicleRepository;
-use App\DTO\Vehicle\VehicleResponseDto;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class VehicleService
- * Contains all logic to interact with Vehicle entities.
+ * Contains all business logic to interact with Vehicle entities.
  */
 class VehicleService
 {
@@ -47,8 +47,13 @@ class VehicleService
         return $this->mapper->fromEntityToResponseDto($vehicle);
     }
 
-
-    public function findVehiclesBySeller(Seller $seller)
+    /**
+     * Finds all vehicles belonging to a specific seller, ordered by creation date.
+     *
+     * @param Seller $seller The seller whose vehicles to find.
+     * @return VehicleResponseDto[] An array of vehicle response DTOs.
+     */
+    public function findVehiclesBySeller(Seller $seller): array
     {
         $vehicles = $this->repository->findBy(['seller' => $seller], ['createdAt' => 'DESC']);
 
@@ -61,13 +66,25 @@ class VehicleService
         return $responseDtos;
     }
 
-
-    public function findVehiclebyId(Vehicle $vehicle)
+    /**
+     * Finds a single vehicle by its entity and returns its DTO representation.
+     *
+     * @param Vehicle $vehicle The vehicle entity.
+     * @return VehicleResponseDto The DTO representation of the vehicle.
+     */
+    public function findVehiclebyId(Vehicle $vehicle): VehicleResponseDto
     {
         return $this->mapper->fromEntityToResponseDto($vehicle);
     }
 
-    public function updateVehicle(Vehicle $vehicle, UpdateVehicleDto $dto)
+    /**
+     * Updates a vehicle's data from a DTO.
+     *
+     * @param Vehicle $vehicle The vehicle entity to update.
+     * @param UpdateVehicleDto $dto The DTO containing the new data.
+     * @return VehicleResponseDto The updated vehicle data as a DTO.
+     */
+    public function updateVehicle(Vehicle $vehicle, UpdateVehicleDto $dto): VehicleResponseDto
     {
         $this->mapper->fromUpdateDtoToEntity($vehicle, $dto);
 
@@ -76,10 +93,14 @@ class VehicleService
         return $this->mapper->fromEntityToResponseDto($vehicle);
     }
 
-    public function deleteVehicle(Vehicle $vehicle)
+    /**
+     * Deletes a vehicle from the database.
+     *
+     * @param Vehicle $vehicle The vehicle entity to delete.
+     */
+    public function deleteVehicle(Vehicle $vehicle): void
     {
         $this->em->remove($vehicle);
         $this->em->flush();
     }
-
 }
