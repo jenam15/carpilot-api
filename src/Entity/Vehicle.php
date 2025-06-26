@@ -70,7 +70,7 @@ class Vehicle
     private ?\DateTimeImmutable $registrationDate = null;
 
     #[ORM\ManyToOne(targetEntity: Seller::class, inversedBy: 'vehicles')]
-    #[ORM\JoinColumn('seller_id', 'id', nullable: false)]
+    #[ORM\JoinColumn('seller_id', 'id', nullable: false, onDelete: 'CASCADE')]
     private ?Seller $seller = null;
 
     #[ORM\Column]
