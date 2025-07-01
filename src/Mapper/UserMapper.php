@@ -3,7 +3,7 @@
 namespace App\Mapper;
 
 use App\DTO\Admin\UserResponseDto;
-use App\DTO\Seller\CreateSellerDto;
+use App\DTO\Public\RegistrationDto;
 use App\DTO\Seller\ProfileResponseDto;
 use App\DTO\Seller\UpdateSellerDto;
 use App\Entity\User\Admin;
@@ -95,10 +95,10 @@ class UserMapper
     }
 
     /**
-     * Transforms a CreateSellerDto into a new Seller entity.
+     * Transforms a RegistrationDto into a new Seller entity.
      * Note: Password hashing is handled in the service layer.
      */
-    public function fromCreateSellerDtoToEntity(CreateSellerDto $dto): Seller
+    public function fromRegistrationDtoToEntity(RegistrationDto $dto): Seller
     {
         $seller = new Seller();
         $seller->setFirstName($dto->firstName);
