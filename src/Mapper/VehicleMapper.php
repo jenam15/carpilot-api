@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mapper\Vehicle;
+namespace App\Mapper;
 
 use App\DTO\Vehicle\CreateVehicleDto;
 use App\DTO\Vehicle\UpdateVehicleDto;

@@ -1,31 +1,33 @@
 <?php
 
-namespace App\Controller\Api\Vehicle;
+namespace App\Controller\Api\Seller;
 
+use App\Entity\Vehicle;
+use App\Entity\User\Seller;
+use OpenApi\Attributes as OA;
 use App\DTO\Vehicle\CreateVehicleDto;
 use App\DTO\Vehicle\UpdateVehicleDto;
+use App\Service\Seller\VehicleService;
 use App\DTO\Vehicle\VehicleResponseDto;
-use App\Entity\User\Seller;
-use App\Entity\Vehicle;
-use App\Service\Vehicle\VehicleService;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use Nelmio\ApiDocBundle\Attribute\Security;
-use OpenApi\Attributes as OA;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Handles CRUD operations for the authenticated Seller's vehicles.
  */
-#[Route('/api/vehicles', name: 'api_vehicle_')]
+#[Route('/api/sellers/vehicles', name: 'api_vehicle_')]
 #[OA\Tag(name: 'Vehicles')]
 #[Security(name: 'bearerAuth')]
-class VehicleController extends AbstractController
+#[IsGranted('ROLE_SELLER')]
+final class VehicleController extends AbstractController
 {
     public function __construct(
         private readonly VehicleService $vehicleService

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Service\Vehicle;
+namespace App\Service\Seller;
 
 use App\DTO\Vehicle\CreateVehicleDto;
 use App\DTO\Vehicle\UpdateVehicleDto;
 use App\DTO\Vehicle\VehicleResponseDto;
 use App\Entity\User\Seller;
 use App\Entity\Vehicle;
-use App\Mapper\Vehicle\VehicleMapper;
+use App\Mapper\VehicleMapper;
 use App\Repository\VehicleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
