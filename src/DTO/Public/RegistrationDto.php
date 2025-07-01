@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO\User;
+namespace App\DTO\Public;
 
 use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     title: "Create Seller DTO",
     description: "Data structure required to create a new seller account."
 )]
-class CreateSellerDto
+class RegistrationDto
 {
     #[OA\Property(description: "Seller's first name.", example: "John")]
     #[Assert\NotBlank(message: "The first name cannot be blank.")]
