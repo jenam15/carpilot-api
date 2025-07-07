@@ -50,11 +50,11 @@ class UserResponseDto
         #[OA\Property(description: "Only for Seller", nullable: true, example: "12 rue de la Paix, 75001 Paris, France")]
         public readonly ?string $fullAddress,
 
-        #[OA\Property(description: "List of vehicles, if the user is a Seller.")]
-        public readonly array $vehicles = [],
-
         #[OA\Property]
-        public readonly \DateTimeImmutable $createdAt
+        public readonly \DateTimeImmutable $createdAt,
+
+        #[OA\Property(description: "List of vehicles, if the user is a Seller.")]
+        public readonly array $vehicles = []
     ) {
     }
 }
