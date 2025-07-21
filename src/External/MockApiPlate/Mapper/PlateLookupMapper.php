@@ -12,20 +12,20 @@ class PlateLookupMapper
     public static function fromArray(array $data): PlateLookupResponseDto
     {
         return new PlateLookupResponseDto(
-            plate: $data['plate'] ?? 'UNKNOWN',
-            vin: $data['vin'] ?? null,
-            brand: $data['brand'] ?? 'UNKNOWN',
-            model: $data['model'] ?? 'UNKNOWN',
-            version: $data['version'] ?? null,
-            energy: $data['energy'] ?? null,
-            fiscalPower: $data['fiscalPower'] ?? null,
-            gearbox: $data['gearBox'] ?? null,
-            doors: $data['doors'] ?? null,
-            seats: $data['seats'] ?? null,
-            bodyType: $data['bodyType'] ?? null,
-            weightKg: $data['weightKg'] ?? null,
-            color: $data['color'] ?? null,
-            registrationDate: $data['registrationDate'] ?? null
+            $data['plate'] ?? 'UNKNOWN',
+            $data['vin'] ?? null,
+            $data['brand'] ?? 'UNKNOWN',
+            $data['model'] ?? 'UNKNOWN',
+            $data['version'] ?? null,
+            $data['energy'] ?? null,
+            $data['fiscalPower'] ?? null,
+            $data['gearBox'] ?? null,
+            $data['doors'] ?? null,
+            $data['seats'] ?? null,
+            $data['bodyType'] ?? null,
+            $data['weightKg'] ?? null,
+            $data['color'] ?? null,
+            $data['registrationDate'] ?? null
         );
     }
 
