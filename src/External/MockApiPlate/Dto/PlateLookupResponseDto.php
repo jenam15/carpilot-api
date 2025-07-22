@@ -35,14 +35,14 @@ class PlateLookupResponseDto
         #[OA\Property(type: "string", example: "AA123BB")]
         public string $plate,
 
-        #[OA\Property(type: "string", example: "VF15ABHG854895231")]
-        public ?string $vin = null,
-
         #[OA\Property(type: "string", example: "Renault")]
-        public string $brand,
+        public ?string $brand = null,
 
         #[OA\Property(type: "string", example: "Clio")]
-        public string $model,
+        public ?string $model = null,
+
+        #[OA\Property(type: "string", example: "VF15ABHG854895231")]
+        public ?string $vin = null,
 
         #[OA\Property(type: "string", example: "1.5 DCI")]
         public ?string $version = null,
