@@ -79,6 +79,9 @@ class Vehicle
     #[ORM\Column]
     protected ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\OneToOne(mappedBy: 'vehicle', cascade: ['persist', 'remove'])]
+    private ?Estimation $estimation = null;
+
 
     /**
      * ==========================================
@@ -396,6 +399,23 @@ class Vehicle
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getEstimation(): ?Estimation
+    {
+        return $this->estimation;
+    }
+
+    public function setEstimation(Estimation $estimation): static
+    {
+        // set the owning side of the relation if necessary
+        if ($estimation->getVehicle() !== $this) {
+            $estimation->setVehicle($this);
+        }
+
+        $this->estimation = $estimation;
 
         return $this;
     }
