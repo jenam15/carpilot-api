@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api\Admin;
 
-use App\DTO\User\Admin\UserResponseDto;
+use App\DTO\Admin\UserResponseDto;
 use App\Service\Admin\SellerService;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use Nelmio\ApiDocBundle\Attribute\Security;
