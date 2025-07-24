@@ -4,6 +4,7 @@ namespace App\Controller\Api\Seller;
 
 use App\Entity\Vehicle;
 use App\Entity\User\Seller;
+use App\Mapper\VehicleMapper;
 use OpenApi\Attributes as OA;
 use App\DTO\Vehicle\CreateVehicleDto;
 use App\DTO\Vehicle\UpdateVehicleDto;
@@ -11,6 +12,7 @@ use App\Service\Seller\VehicleService;
 use App\DTO\Vehicle\VehicleResponseDto;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use Nelmio\ApiDocBundle\Attribute\Security;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,45 +32,49 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class VehicleController extends AbstractController
 {
     public function __construct(
-        private readonly VehicleService $vehicleService
+        private readonly VehicleService $vehicleService,
+        private readonly VehicleMapper $vehicleMapper,
+
     ) {
     }
 
-    #[Route('', name: 'create', methods: ['POST'])]
     #[OA\Post(
-        summary: "Create a new vehicle",
-        description: "Allows an authenticated seller to create a new vehicle and link it to their account."
+        summary: "Create a vehicle from estimation token",
+        requestBody: new OA\RequestBody(
+            description: "Estimation token payload",
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: "estimation_token", type: "string", example: "abc123"),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 201,
+                description: "Vehicle created successfully.",
+                content: new OA\JsonContent(ref: new Model(type: VehicleResponseDto::class))
+            ),
+            new OA\Response(response: 400, description: "Missing token."),
+            new OA\Response(response: 403, description: "Access denied."),
+        ]
     )]
-    #[OA\RequestBody(
-        description: "Data required to create a new vehicle",
-        required: true,
-        content: new Model(type: CreateVehicleDto::class)
-    )]
-    #[OA\Response(
-        response: 201,
-        description: "Vehicle created successfully",
-        content: new Model(type: VehicleResponseDto::class)
-    )]
-    #[OA\Response(response: 403, description: "Access Denied (not authenticated).")]
-    #[OA\Response(response: 409, description: "Conflict. A vehicle with the same plate or VIN already exists.")]
-    #[OA\Response(response: 422, description: "Validation error. The request body is invalid.")]
-    public function create(
-        #[MapRequestPayload] CreateVehicleDto $dto,
-        #[CurrentUser] ?Seller $seller
-    ): JsonResponse {
-        if (!$seller) {
-            return $this->json(['message' => 'Forbidden access. You must be logged in as a seller.'], Response::HTTP_FORBIDDEN);
+    #[Route('/create-from-estimation', 'create_from_est', methods: ['POST'])]
+    public function createFromEstimation(Request $request, #[CurrentUser] Seller $seller)
+    {
+        $token = $request->toArray()['estimation_token'] ?? null;
+
+        if (!$token) {
+            return new JsonResponse('Missing token.', RESPONSE::HTTP_BAD_REQUEST);
         }
 
-        try {
-            $responseDto = $this->vehicleService->createVehicle($dto, $seller);
-            return $this->json($responseDto, Response::HTTP_CREATED);
-        } catch (UniqueConstraintViolationException $e) {
-            return $this->json(['error' => 'Data conflict', 'message' => 'A vehicle with this license plate or VIN already exists.'], Response::HTTP_CONFLICT);
-        } catch (\Exception $e) {
-            return $this->json(['error' => 'An unexpected error occurred', 'message' => 'Could not create the vehicle.', 'debug' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
-        }
+        $vehicle = $this->vehicleService->createVehicleFromEstimation($token, $seller);
+
+        $responseDto = $this->vehicleMapper->fromEntityToResponseDto($vehicle);
+
+        return new JsonResponse($responseDto, RESPONSE::HTTP_CREATED);
     }
+
 
     #[Route('', name: 'list', methods: ['GET'])]
     #[OA\Get(

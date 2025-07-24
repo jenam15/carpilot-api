@@ -2,14 +2,18 @@
 
 namespace App\Service\Seller;
 
+use App\Entity\Vehicle;
+use App\Entity\Estimation;
+use App\Entity\User\Seller;
+use App\Mapper\VehicleMapper;
 use App\DTO\Vehicle\CreateVehicleDto;
 use App\DTO\Vehicle\UpdateVehicleDto;
-use App\DTO\Vehicle\VehicleResponseDto;
-use App\Entity\User\Seller;
-use App\Entity\Vehicle;
-use App\Mapper\VehicleMapper;
 use App\Repository\VehicleRepository;
+use App\DTO\Vehicle\VehicleResponseDto;
+use App\DTO\Public\EstimationRequestDto;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class VehicleService
@@ -29,23 +33,54 @@ class VehicleService
     ) {
     }
 
+
     /**
-     * Creates a new vehicle for a given seller and returns its corresponding Response DTO.
+     * Creates a Vehicle entity from cached estimation data using the provided token and Seller.
      *
-     * @param CreateVehicleDto $dto The DTO containing the new vehicle's data.
-     * @param Seller $seller The owner of the new vehicle.
-     * @return VehicleResponseDto The DTO representing the newly created vehicle.
+     * Retrieves estimation data from cache, maps it to a DTO, creates a Vehicle entity,
+     * associates it with the Seller and Estimation, persists it, and removes the cache item.
+     *
+     * @param string $token The cache token for the estimation data.
+     * @param Seller $seller The seller entity to associate with the vehicle.
+     * @return Vehicle The newly created Vehicle entity.
+     * @throws NotFoundHttpException If the estimation token is expired or not found in cache.
      */
-    public function createVehicle(CreateVehicleDto $dto, Seller $seller): VehicleResponseDto
+    public function createVehicleFromEstimation(string $token, Seller $seller)
     {
+        $cache = new FilesystemAdapter();
+        $item = $cache->getItem($token);
+
+        if (!$item->isHit()) {
+            throw new NotFoundHttpException('Estimation token expired.');
+        }
+
+        $data = $item->get();
+        $vehicleData = $data['vehicle_data'];
+
+        $dto = new EstimationRequestDto();
+
+        foreach ($vehicleData as $key => $value) {
+            if (property_exists($dto, $key)) {
+                $dto->$key = $value;
+            }
+        }
+
         $vehicle = $this->mapper->fromCreateDtoToEntity($dto);
         $vehicle->setSeller($seller);
+
+        $estimation = new Estimation();
+        $estimation->setEstimatedPrice($data['price']);
+        $vehicle->setEstimation($estimation);
 
         $this->em->persist($vehicle);
         $this->em->flush();
 
-        return $this->mapper->fromEntityToResponseDto($vehicle);
+        $cache->deleteItem($token);
+
+        return $vehicle;
+
     }
+
 
     /**
      * Finds all vehicles belonging to a specific seller, ordered by creation date.
