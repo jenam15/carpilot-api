@@ -2,11 +2,13 @@
 
 namespace App\Mapper;
 
+use App\DTO\Public\EstimationRequestDto;
+use DateTimeImmutable;
+use App\Entity\Vehicle;
+use App\Mapper\EstimationMapper;
 use App\DTO\Vehicle\CreateVehicleDto;
 use App\DTO\Vehicle\UpdateVehicleDto;
 use App\DTO\Vehicle\VehicleResponseDto;
-use App\Entity\Vehicle;
-use DateTimeImmutable;
 
 /**
  * Class VehicleMapper
@@ -15,13 +17,19 @@ use DateTimeImmutable;
  */
 class VehicleMapper
 {
+
+    public function __construct(
+        private readonly EstimationMapper $estimationMapper
+    ) {
+
+    }
     /**
      * Transforms a CreateVehicleDto into a new Vehicle entity.
      *
-     * @param CreateVehicleDto $dto The data transfer object from the API request.
+     * @param EstimationRequestDto $dto The data transfer object from the API request.
      * @return Vehicle The newly created Vehicle entity, ready to be persisted.
      */
-    public function fromCreateDtoToEntity(CreateVehicleDto $dto): Vehicle
+    public function fromCreateDtoToEntity(EstimationRequestDto $dto): Vehicle
     {
         $vehicle = new Vehicle();
 
@@ -112,6 +120,8 @@ class VehicleMapper
      */
     public function fromEntityToResponseDto(Vehicle $vehicle): VehicleResponseDto
     {
+        $estimationDto = $this->estimationMapper->fromEntityToResponseDto($vehicle->getEstimation());
+
         return new VehicleResponseDto(
             $vehicle->getId(),
             $vehicle->getPlate(),
@@ -131,7 +141,33 @@ class VehicleMapper
             $vehicle->getColor(),
             $vehicle->getRegistrationDate(),
             $vehicle->getCreatedAt(),
-            $vehicle->getUpdatedAt()
+            $vehicle->getUpdatedAt(),
+            $estimationDto
+
         );
     }
+
+    public function fromApiToCreateVehicleDto(array $data)
+    {
+        $dto = new CreateVehicleDto();
+
+        $dto->plate = $data['plate'] ?? null;
+        $dto->vin = $data['vin'] ?? null;
+        $dto->brand = $data['brand'] ?? null;
+        $dto->model = $data['model'] ?? null;
+        $dto->version = $data['version'] ?? null;
+        $dto->energy = $data['energy'] ?? null;
+        $dto->horsePower = $data['horsePower'] ?? null;
+        $dto->fiscalPower = $data['fiscalPower'] ?? null;
+        $dto->gearBox = $data['gearBox'] ?? null;
+        $dto->doors = $data['doors'] ?? null;
+        $dto->seats = $data['seats'] ?? null;
+        $dto->bodyType = $data['bodyType'] ?? null;
+        $dto->weightKg = $data['weightKg'] ?? null;
+        $dto->color = $data['color'] ?? null;
+        $dto->registrationDate = $data['registrationDate'] ?? null;
+
+        return $dto;
+    }
+
 }
