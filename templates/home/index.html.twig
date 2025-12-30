@@ -1,0 +1,295 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} | Estimer votre véhicule{% endblock %}
+
+{% block body %}
+<div class="container mx-auto my-8 px-4">
+  {# Conteneur principal Stimulus #}
+
+    <div {{ stimulus_target('estimation-form', 'estimationContainer') }}>
+
+      {# ---- PARTIE 1 : Recherche par plaque ---- #}
+      <h2 class="text-2xl bg-red-500 font-bold mb-2">Estimez la valeur de votre véhicule</h2>
+      <p class="mb-6 text-gray-600">Commencez par entrer votre plaque d'immatriculation.</p>
+
+      <div class="flex items-center space-x-2 mb-8 max-w-md">
+        <input
+          type="text"
+          placeholder="AA‑123‑BB"
+          class="flex-1 border border-gray-500 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          {{ stimulus_target('estimation-form', 'plateInput') }}
+          {{ stimulus_action('estimation-form', 'lookupPlate', 'input') }}
+        >
+        <button
+          type="button"
+          class="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          {{ stimulus_action('estimation-form', 'lookupPlate', 'click') }}
+        >
+          Rechercher
+        </button>
+        <span
+          class="hidden"
+          {{ stimulus_target('estimation-form', 'spinner') }}
+        >⏳</span>
+      </div>
+      <div
+        class="text-red-600 text-sm mb-4 hidden"
+        {{ stimulus_target('estimation-form', 'errorMessage') }}
+      ></div>
+
+      {# ---- PARTIE 2 : Formulaire complet ---- #}
+      <div
+        class="hidden"
+        {{ stimulus_target('estimation-form', 'formContainer') }}
+      >
+        <hr class="my-6 border-gray-200">
+        <h3 class="text-xl font-semibold mb-4">Complétez les informations de votre véhicule</h3>
+
+        <form
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          {{ stimulus_action('estimation-form', 'submitEstimation', 'submit') }}
+        >
+          {# Plaque #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Plaque</label>
+            <input
+              type="text"
+              readonly
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'plateResultInput') }}
+            >
+          </div>
+
+          {# VIN #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">N° de série (VIN)</label>
+            <input
+              type="text"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'vinInput') }}
+            >
+          </div>
+
+          {# Date d'immatriculation #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Date d'immatriculation</label>
+            <input
+              type="date"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'registrationDateInput') }}
+            >
+          </div>
+
+          {# Marque #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Marque</label>
+            <input
+              type="text"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'brandInput') }}
+            >
+          </div>
+
+          {# Modèle #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Modèle</label>
+            <input
+              type="text"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'modelInput') }}
+            >
+          </div>
+
+          {# Version #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Version</label>
+            <input
+              type="text"
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'versionInput') }}
+            >
+          </div>
+
+          {# Couleur #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Couleur</label>
+            <input
+              type="text"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'colorInput') }}
+            >
+          </div>
+
+          {# Carrosserie #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Carrosserie</label>
+            <input
+              type="text"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'bodyTypeInput') }}
+            >
+          </div>
+
+          {# Énergie #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Énergie</label>
+            <input
+              type="text"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'energyInput') }}
+            >
+          </div>
+
+          {# Boîte de vitesse #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Boîte de vitesse</label>
+            <input
+              type="text"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'gearBoxInput') }}
+            >
+          </div>
+
+          {# Puissance (ch) #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Puissance (ch)</label>
+            <input
+              type="number"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'horsePowerInput') }}
+            >
+          </div>
+
+          {# Puissance fiscale #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Puissance fiscale</label>
+            <input
+              type="number"
+              step="0.1"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'fiscalPowerInput') }}
+            >
+          </div>
+
+          {# Portes #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Portes</label>
+            <input
+              type="number"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'doorsInput') }}
+            >
+          </div>
+
+          {# Sièges #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Sièges</label>
+            <input
+              type="number"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'seatsInput') }}
+            >
+          </div>
+
+          {# Poids (kg) #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Poids (kg)</label>
+            <input
+              type="number"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'weightKgInput') }}
+            >
+          </div>
+
+          {# Kilométrage #}
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Kilométrage</label>
+            <input
+              type="number"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'mileageInput') }}
+            >
+          </div>
+
+          <div class="col-span-full text-right">
+            <button
+              type="submit"
+              class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              Calculer mon estimation
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {# ---- PARTIE 3 : Formulaire de connexion ---- #}
+      <div
+        class="hidden mt-8"
+        {{ stimulus_target('estimation-form', 'loginContainer') }}
+      >
+        <hr class="mb-6 border-gray-200">
+        <h3 class="text-xl font-semibold mb-2">Connectez-vous pour sauvegarder votre estimation</h3>
+        <p class="mb-4 text-gray-600">Une fois connecté, votre véhicule sera automatiquement ajouté à votre profil.</p>
+
+        <form
+          class="max-w-md space-y-4"
+          {{ stimulus_action('estimation-form', 'submitLogin', 'submit') }}
+        >
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              type="email"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'emailInput') }}
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Mot de passe</label>
+            <input
+              type="password"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500"
+              {{ stimulus_target('estimation-form', 'passwordInput') }}
+            >
+          </div>
+          <div class="text-right">
+            <button
+              type="submit"
+              class="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              Se connecter et Sauvegarder
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {# ---- PARTIE 4 : Message de succès ---- #}
+      <div
+        class="hidden mt-8"
+        {{ stimulus_target('estimation-form', 'successContainer') }}
+      >
+        <div class="rounded-md bg-green-50 p-4">
+          <h3 class="text-lg font-medium text-green-800">Félicitations !</h3>
+          <p class="mt-1 text-green-700">Votre véhicule a bien été ajouté à votre profil.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
