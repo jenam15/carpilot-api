@@ -28,26 +28,6 @@ final class EstimationController extends AbstractController
 
 
     #[Route('/lookup-by-plate', 'plate_lookup', methods: ['POST'])]
-    #[OA\Post(
-        summary: "Lookup vehicle by license plate",
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(ref: new Model(type: PlateLookupRequestDto::class))
-        ),
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: "Vehicle data found",
-                content: new OA\JsonContent(
-                    // ici tu peux détailler les propriétés
-                )
-            ),
-            new OA\Response(
-                response: 503,
-                description: "Service unavailable"
-            )
-        ]
-    )]
     public function lookupByPlate(#[MapRequestPayload] PlateLookupRequestDto $dto)
     {
         try {
@@ -63,24 +43,7 @@ final class EstimationController extends AbstractController
     }
 
     #[Route('/calculate', 'calculate', methods: ['POST'])]
-    #[OA\Post(
-        summary: "Calculate estimation and get token.",
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(ref: new Model(type: EstimationRequestDto::class))
-        ),
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: "Returns an estimation token",
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: "estimation_token", type: "string", example: "abc123"),
-                    ]
-                )
-            )
-        ]
-    )]
+
     public function calculate(#[MapRequestPayload] EstimationRequestDto $dto)
     {
         $token = $this->estimationService->calculateAndCache($dto);

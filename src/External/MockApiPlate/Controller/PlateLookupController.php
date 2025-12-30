@@ -81,12 +81,12 @@ class PlateLookupController extends AbstractController
 
         $vehicle = $this->dataProvider->findByPlate($plate);
 
-        if ($vehicle->brand === 'UNKNOWN' && $vehicle->model === 'UNKNOWN') {
+        if ($vehicle->brand === null && $vehicle->model === null) {
             return $this->json([
                 'error' => true,
                 'message' => 'Plate not recognized',
                 'data' => $vehicle
-            ], 404);
+            ], 200);
         }
 
         return $this->json([
@@ -94,6 +94,5 @@ class PlateLookupController extends AbstractController
             'data' => $vehicle
         ], 200);
     }
-
 
 }

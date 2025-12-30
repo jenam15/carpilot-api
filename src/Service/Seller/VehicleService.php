@@ -72,6 +72,7 @@ class VehicleService
         $estimation->setEstimatedPrice($data['price']);
         $vehicle->setEstimation($estimation);
 
+
         $this->em->persist($vehicle);
         $this->em->flush();
 
