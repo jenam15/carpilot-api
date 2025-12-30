@@ -4,6 +4,7 @@ namespace App\DTO\Vehicle;
 
 use DateTimeImmutable;
 use OpenApi\Attributes as OA;
+use App\DTO\Vehicle\EstimationResponseDto;
 
 #[OA\Schema(
     title: "Vehicle Response",
@@ -68,7 +69,9 @@ class VehicleResponseDto
         public readonly ?DateTimeImmutable $createdAt,
 
         #[OA\Property(description: "The date and time the vehicle was last updated.", type: "string", format: "date-time")]
-        public readonly ?DateTimeImmutable $updatedAt
+        public readonly ?DateTimeImmutable $updatedAt,
+
+        public readonly ?EstimationResponseDto $estimation = null
     ) {
     }
 }
