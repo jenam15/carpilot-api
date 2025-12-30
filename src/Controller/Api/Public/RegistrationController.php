@@ -3,6 +3,7 @@
 namespace App\Controller\Api\Public;
 
 use App\DTO\Public\RegistrationDto;
+use App\DTO\Seller\SellerResponseDto;
 use App\Service\Public\RegistrationService;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -34,7 +35,7 @@ final class RegistrationController extends AbstractController
     #[OA\Response(
         response: 201,
         description: "Seller created successfully.",
-        content: new Model(type: ProfileResponseDto::class)
+        content: new Model(type: SellerResponseDto::class)
     )]
     #[OA\Response(response: 409, description: "Conflict. The email address is already in use.")]
     #[OA\Response(response: 422, description: "Validation Error.")]
